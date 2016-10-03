@@ -1,6 +1,6 @@
 #!/bin/bash
 
-html=$(curl "$1" --compressed)
+html=$(curl -s -H 'DNT: 1' -H 'Accept-Encoding: gzip, deflate, sdch, br' -H 'Accept-Language: en-US,en;q=0.8,he;q=0.6' -H 'Upgrade-Insecure-Requests: 1' -H "User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.$RANDOM.$RANDOM.$RANDOM Mobile Safari/537.36" -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Referer: https://google.com/' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed "$1")
 
 section_per_line_html=$(echo "$html" | \
 tr -d '\n' | \
@@ -69,14 +69,24 @@ awk -F '"' '/^"api"/ {print $4}' | \
 sort | \
 uniq)
 
+virustotal=$(echo "$section_per_line_html" | \
+grep '^<section id="static_antivirus">' | \
+sed 's/<span/\n<span/g' | \
+awk 'BEGIN {detected=0; clean=0;} '\
+'/class="muted"/ {clean++} '\
+'/class="text-error"/ {detected++} '\
+'END {print detected "/" (detected+clean)}')
+
 info=$(echo "$section_per_line_html" | \
 grep 'id="file"' | \
 sed 's/<tr>/\n<tr>/g' | \
 grep -vi 'yara' | \
-awk -F '[<>]' 'BEGIN {print "{"} /^<tr>.*<th>.*<td>[^<]/ {print "\"" $5 "\":\"" $9 "\","} END {print "}"}' | \
+awk -F '[<>]' 'BEGIN {print "{"} '\
+'/^<tr>.*<th>.*<td>[^<]/ {print "\"" $5 "\":\"" $9 "\","} '\
+'END {print "}"}' | \
 tr -d '\n' | \
 sed 's/,}/}/g' | \
-sed 's/,/,\n/g')
+sed 's/",/",\n/g')
 
 echo "$info" | jq \
 --arg hosts "$hosts" \
@@ -86,6 +96,8 @@ echo "$info" | jq \
 --arg mutex "$mutex" \
 --arg api "$api" \
 --arg url "$1" \
+--arg virustotal "$virustotal" \
+'.VirusTotal = $virustotal | '\
 '.URL = $url | '\
 '.Hosts = ($hosts | split("\n")) | '\
 '.Domains = ($domains | split("\n")) | '\
