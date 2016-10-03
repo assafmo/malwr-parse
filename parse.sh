@@ -1,6 +1,17 @@
 #!/bin/bash
 
-html=$(curl -s -H 'DNT: 1' -H 'Accept-Encoding: gzip, deflate, sdch, br' -H 'Accept-Language: en-US,en;q=0.8,he;q=0.6' -H 'Upgrade-Insecure-Requests: 1' -H "User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.$RANDOM.$RANDOM.$RANDOM Mobile Safari/537.36" -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' -H 'Referer: https://google.com/' -H 'Connection: keep-alive' -H 'Cache-Control: max-age=0' --compressed "$1")
+html=$(curl -s \
+-H 'DNT: 1' \
+-H 'Accept-Encoding: gzip, deflate, sdch, br' \
+-H 'Accept-Language: en-US,en;q=0.8,he;q=0.6' \
+-H 'Upgrade-Insecure-Requests: 1' \
+-H "User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.$RANDOM.$RANDOM Mobile Safari/537.36" \
+-H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' \
+-H 'Referer: https://google.com/' \
+-H 'Connection: keep-alive' \
+-H 'Cache-Control: max-age=0' \
+--compressed \
+-L "$1")
 
 section_per_line_html=$(echo "$html" | \
 tr -d '\n' | \
