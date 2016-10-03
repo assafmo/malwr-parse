@@ -85,4 +85,11 @@ echo "$info" | jq \
 --arg registry "$registry" \
 --arg mutex "$mutex" \
 --arg api "$api" \
-'.Hosts = ($hosts | split("\n")) | .Domains = ($domains | split("\n")) | .Files = ($files | split("\n")) | .Registry = ($registry | split("\n")) | .Mutex = ($mutex | split("\n")) | .API = ($api | split("\n"))'
+--arg url "$1" \
+'.URL = $url | '\
+'.Hosts = ($hosts | split("\n")) | '\
+'.Domains = ($domains | split("\n")) | '\
+'.Files = ($files | split("\n")) |'\
+'.Registry = ($registry | split("\n")) | '\
+'.Mutex = ($mutex | split("\n")) | '\
+'.API = ($api | split("\n"))'
