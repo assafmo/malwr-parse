@@ -97,6 +97,7 @@ awk -F '[<>]' 'BEGIN {print "{"} '\
 'END {print "}"}' | \
 tr -d '\n' | \
 sed 's/,}/}/g' | \
+sed 's/\\/\\\\/g' | \
 sed 's/",/",\n/g')
 
 echo "$info" | jq \
