@@ -1,4 +1,4 @@
-# This is a toy parser of exporting json [malwr.com](https://malwr.com) reports using only bash commands.
+# This is a toy parser for exporting json [malwr.com](https://malwr.com) reports using only bash commands.
 
 ## Installation
 ```bash
