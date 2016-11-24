@@ -109,7 +109,7 @@ echo "$info" | jq \
 --arg registry "$registry" \
 --arg mutex "$mutex" \
 --arg api "$api" \
---arg url "$1" \
+--arg url "https://malwr.com/analysis/$1" \
 --arg end_date "$end_date" \
 --arg virustotal "$virustotal" \
 '.VirusTotal = $virustotal | '\
