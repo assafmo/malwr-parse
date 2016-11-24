@@ -18,6 +18,8 @@ tr -d '\n' | \
 sed 's/<section/\n\<section/g' | \
 grep '^<section')
 
+end_date=$(echo "$section_per_line_html" | fgrep 'id="information"' | awk -F '[<>]' '{print $51}')
+
 hosts=$(echo "$section_per_line_html" | \
 grep '<section id="hosts">' | \
 head -1 | \
@@ -108,9 +110,11 @@ echo "$info" | jq \
 --arg mutex "$mutex" \
 --arg api "$api" \
 --arg url "$1" \
+--arg end_date "$end_date" \
 --arg virustotal "$virustotal" \
 '.VirusTotal = $virustotal | '\
 '.URL = $url | '\
+'.Date = $end_date | '\
 '.Hosts = ($hosts | split("\n")) | '\
 '.Domains = ($domains | split("\n")) | '\
 '.Files = ($files | split("\n")) |'\
