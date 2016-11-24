@@ -11,7 +11,7 @@ html=$(curl -s \
 -H 'Connection: keep-alive' \
 -H 'Cache-Control: max-age=0' \
 --compressed \
--L "$1")
+-L "https://malwr.com/analysis/$1")
 
 section_per_line_html=$(echo "$html" | \
 tr -d '\n' | \
